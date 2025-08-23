@@ -13,3 +13,148 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id          String        @id @default(uuid())
+  email       String        @unique
+  name        String
+  password    String
+  token       String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @default(now()) @updatedAt
+  userAddress UserAddress[]
+  orders      Order[]
+}
+
+model UserAddress {
+  id         String   @id @default(uuid())
+  userId     String
+  street     String
+  city       String
+  state      String
+  number     String
+  zipCode    String
+  country    String
+  complement String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Banner {
+  id        String   @id @default(uuid())
+  image     String
+  linkUrl   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Product {
+  id          String            @id @default(uuid())
+  label       String
+  description String?
+  price       Float
+  categoryId  String
+  viewsCount  Int               @default(0)
+  salesCount  Int               @default(0)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @default(now()) @updatedAt
+  images      ProductImage[]
+  metadata    ProductMetadata[]
+  orders      OrderProduct[]
+  category    Category?         @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+}
+
+model ProductImage {
+  id        String   @id @default(uuid())
+  productId String
+  imageUrl  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model ProductMetadata {
+  id                 String   @id @default(uuid())
+  productId          String
+  categoryMetadataId String
+  metadataValueId    String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @default(now()) @updatedAt
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model Category {
+  id        String             @id @default(uuid())
+  slug      String             @unique
+  name      String
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @default(now()) @updatedAt
+  products  Product[]
+  metadata  CategoryMetadata[]
+}
+
+model CategoryMetadata {
+  id         String          @id
+  name       String
+  categoryId String
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @default(now()) @updatedAt
+  category   Category        @relation(fields: [categoryId], references: [id])
+  values     MetadataValue[]
+}
+
+model MetadataValue {
+  id                 String           @id
+  label              String
+  categoryMetadataId String
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @default(now()) @updatedAt
+  categoryMetadata   CategoryMetadata @relation(fields: [categoryMetadataId], references: [id])
+}
+
+model Order {
+  id                 String         @id @default(uuid())
+  userId             String
+  total              Float
+  status             String         @default("PENDING") // PENDING, COMPLETED, CANCELED
+  shippingCost       Float          @default(0)
+  shippingDays       Int            @default(0)
+  shippingZipCode    String?
+  shippingStreet     String?
+  shippingNumber     String?
+  shippingCity       String?
+  shippingState      String?
+  shippingCountry    String?
+  shippingComplement String?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @default(now()) @updatedAt
+  orderItems         OrderProduct[]
+  user               User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model OrderProduct {
+  id        String   @id @default(uuid())
+  orderId   String
+  productId String
+  quantity  Int      @default(1)
+  price     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+}
