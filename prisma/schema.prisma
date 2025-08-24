@@ -15,7 +15,7 @@ datasource db {
 }
 
 model User {
-  id          String        @id @default(uuid())
+  id          Int           @id @default(autoincrement())
   email       String        @unique
   name        String
   password    String
@@ -27,8 +27,8 @@ model User {
 }
 
 model UserAddress {
-  id         String   @id @default(uuid())
-  userId     String
+  id         Int      @id @default(autoincrement())
+  userId     Int
   street     String
   city       String
   state      String
@@ -45,7 +45,7 @@ model UserAddress {
 }
 
 model Banner {
-  id        String   @id @default(uuid())
+  id        Int      @id @default(autoincrement())
   image     String
   linkUrl   String
   createdAt DateTime @default(now())
@@ -53,11 +53,11 @@ model Banner {
 }
 
 model Product {
-  id          String            @id @default(uuid())
+  id          Int               @id @default(autoincrement())
   label       String
   description String?
   price       Float
-  categoryId  String
+  categoryId  Int
   viewsCount  Int               @default(0)
   salesCount  Int               @default(0)
   createdAt   DateTime          @default(now())
@@ -69,8 +69,8 @@ model Product {
 }
 
 model ProductImage {
-  id        String   @id @default(uuid())
-  productId String
+  id        Int      @id @default(autoincrement())
+  productId Int
   imageUrl  String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -81,8 +81,8 @@ model ProductImage {
 }
 
 model ProductMetadata {
-  id                 String   @id @default(uuid())
-  productId          String
+  id                 Int      @id @default(autoincrement())
+  productId          Int
   categoryMetadataId String
   metadataValueId    String
   createdAt          DateTime @default(now())
@@ -94,7 +94,7 @@ model ProductMetadata {
 }
 
 model Category {
-  id        String             @id @default(uuid())
+  id        Int                @id @default(autoincrement())
   slug      String             @unique
   name      String
   createdAt DateTime           @default(now())
@@ -106,7 +106,7 @@ model Category {
 model CategoryMetadata {
   id         String          @id
   name       String
-  categoryId String
+  categoryId Int
   createdAt  DateTime        @default(now())
   updatedAt  DateTime        @default(now()) @updatedAt
   category   Category        @relation(fields: [categoryId], references: [id])
@@ -123,10 +123,10 @@ model MetadataValue {
 }
 
 model Order {
-  id                 String         @id @default(uuid())
-  userId             String
+  id                 Int            @id @default(autoincrement())
+  userId             Int
   total              Float
-  status             String         @default("PENDING") // PENDING, COMPLETED, CANCELED
+  status             String         @default("pending") // PENDING, COMPLETED, CANCELED
   shippingCost       Float          @default(0)
   shippingDays       Int            @default(0)
   shippingZipCode    String?
@@ -145,9 +145,9 @@ model Order {
 }
 
 model OrderProduct {
-  id        String   @id @default(uuid())
-  orderId   String
-  productId String
+  id        Int      @id @default(autoincrement())
+  orderId   Int
+  productId Int
   quantity  Int      @default(1)
   price     Float
   createdAt DateTime @default(now())
