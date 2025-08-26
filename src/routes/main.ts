@@ -1,6 +1,6 @@
 import { Router } from "express";
-import * as bannerController from '../controllers/banner';
-import * as productController from '../controllers/product';
+import * as bannerController from '../controllers/banner_controller';
+import * as productController from '../controllers/products_controller';
 
 export const routes = Router();
 
