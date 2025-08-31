@@ -129,9 +129,11 @@ export const getProductsFromSameCategory = async (
     orderBy: { viewsCount: "desc" },
   });
 
-  return relatedProducts.map(product => ({
+  return relatedProducts.map((product) => ({
     ...product,
-    image: product.images[0] ? `media/products/${product.images[0].imageUrl}` : null,
+    image: product.images[0]
+      ? `media/products/${product.images[0].imageUrl}`
+      : null,
     images: undefined,
-  }))
+  }));
 };
