@@ -3,6 +3,7 @@ import * as bannerController from '../controllers/banner.controller';
 import * as productController from '../controllers/products.controller';
 import * as categorytController from '../controllers/category.controller';
 import * as cartController from '../controllers/cart.controller';
+import * as userController from '../controllers/user.controller';
 
 
 export const routes = Router();
@@ -20,3 +21,4 @@ routes.get('/category/:slug/metadata', categorytController.getCategoryWithMetada
 
 routes.post('/cart/mount', cartController.cartMount);
 routes.get('/cart/shipping', cartController.calculateShipping);
+routes.post('/user/register',userController.registerUser);
