@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import { cartMountSchema } from "../schemas/cart-mount-schema";
 import { getProduct } from "../services/product.service";
 import { getAbsoluteImageUrl } from "../utils/get-absolute-image";
+import { calculateShippingSchema } from "../schemas/calculate-shipping-schema";
 
 export const cartMount: RequestHandler = async (req, res) => {
     // Lógica para montar o carrinho
@@ -26,4 +27,15 @@ export const cartMount: RequestHandler = async (req, res) => {
     }
 
     res.json({ error: null, products });
+}
+
+export const calculateShipping: RequestHandler = async  (req, res) => {
+    const parseResult = calculateShippingSchema.safeParse(req.query);
+    if (!parseResult.success) {
+        res.status(400).json({error: 'CEP inválido'});
+        return;
+    }
+    const { zipcode } = parseResult.data;
+
+    res.json({ error: null, zipcode, cost: 9.90, days: 7 });
 }

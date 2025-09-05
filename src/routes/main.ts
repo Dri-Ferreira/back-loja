@@ -19,3 +19,4 @@ routes.get('/category/:slug/metadata', categorytController.getCategoryWithMetada
 
 
 routes.post('/cart/mount', cartController.cartMount);
+routes.get('/cart/shipping', cartController.calculateShipping);
